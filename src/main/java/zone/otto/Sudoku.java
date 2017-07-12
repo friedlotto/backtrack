@@ -183,8 +183,7 @@ public class Sudoku {
                         && data[ro + rc][co + cc] > 0) {
 
                     valid.remove(data[ro + rc][co + cc]);
-
-
+                    
                 }
 
             }
