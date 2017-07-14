@@ -93,6 +93,8 @@ public class TestSudoku {
     @Test
     public void testDataSolve() {
 
+        final int[][] data = Sudoku.dataParse(testResourcePath + "TestSudoku.dat");
+
         String expected = "     0 1 2   3 4 5   6 7 8\n" +
                 "   +-------+-------+-------+\n" +
                 " 0 | 3 4 7 | 1 8 2 | 5 6 9 |\n" +
@@ -108,10 +110,10 @@ public class TestSudoku {
                 " 8 | 9 5 4 | 2 1 7 | 6 8 3 |\n" +
                 "   +-------+-------+-------+\n";
 
-        Sudoku.dataParse(testResourcePath + "TestSudoku.dat");
-        Assert.assertTrue(Sudoku.dataSolve(0, 0));
 
-        String actual = Sudoku.dataRender();
+        Assert.assertTrue(Sudoku.dataSolve(0, 0, data));
+
+        String actual = Sudoku.dataRender(data);
 
         Assert.assertEquals(expected, actual);
 
@@ -153,62 +155,42 @@ public class TestSudoku {
     @Test
     public void testGetValidSet() {
 
+        final int[][] data = Sudoku.dataParse(testResourcePath + "TestSudoku.dat");
+
         int[] actual;
         int[] expected;
 
-        Sudoku.dataParse(testResourcePath + "TestSudoku.dat");
-
         // All cells with fully populated ValidSet.
-        actual = Sudoku.getValidSet(0, 8).stream().mapToInt(Integer::intValue).sorted().toArray();
+        actual = Sudoku.getValidSet(0, 8, data).stream().mapToInt(Integer::intValue).sorted().toArray();
         expected = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9};
         Assert.assertArrayEquals(expected, actual);
 
         // All cells with only a single elimination from the ValidSet.
-        actual = Sudoku.getValidSet(0, 7).stream().mapToInt(Integer::intValue).sorted().toArray();
+        actual = Sudoku.getValidSet(0, 7, data).stream().mapToInt(Integer::intValue).sorted().toArray();
         expected = new int[]{1, 2, 3, 4, 6, 7, 9};
         Assert.assertArrayEquals(expected, actual);
-        actual = Sudoku.getValidSet(5, 8).stream().mapToInt(Integer::intValue).sorted().toArray();
+        actual = Sudoku.getValidSet(5, 8, data).stream().mapToInt(Integer::intValue).sorted().toArray();
         expected = new int[]{1, 2, 4, 6, 7, 8, 9};
         Assert.assertArrayEquals(expected, actual);
 
         // All cells with only two entry ValidSet.
-        actual = Sudoku.getValidSet(6, 5).stream().mapToInt(Integer::intValue).sorted().toArray();
+        actual = Sudoku.getValidSet(6, 5, data).stream().mapToInt(Integer::intValue).sorted().toArray();
         expected = new int[]{1, 8};
         Assert.assertArrayEquals(expected, actual);
-        actual = Sudoku.getValidSet(7, 0).stream().mapToInt(Integer::intValue).sorted().toArray();
+        actual = Sudoku.getValidSet(7, 0, data).stream().mapToInt(Integer::intValue).sorted().toArray();
         expected = new int[]{1, 8};
         Assert.assertArrayEquals(expected, actual);
-        actual = Sudoku.getValidSet(7, 1).stream().mapToInt(Integer::intValue).sorted().toArray();
+        actual = Sudoku.getValidSet(7, 1, data).stream().mapToInt(Integer::intValue).sorted().toArray();
         expected = new int[]{6, 8};
         Assert.assertArrayEquals(expected, actual);
-        actual = Sudoku.getValidSet(8, 4).stream().mapToInt(Integer::intValue).sorted().toArray();
+        actual = Sudoku.getValidSet(8, 4, data).stream().mapToInt(Integer::intValue).sorted().toArray();
         expected = new int[]{1, 2};
         Assert.assertArrayEquals(expected, actual);
 
         // All cells with single entry ValidSet.
-        actual = Sudoku.getValidSet(7, 2).stream().mapToInt(Integer::intValue).sorted().toArray();
+        actual = Sudoku.getValidSet(7, 2, data).stream().mapToInt(Integer::intValue).sorted().toArray();
         expected = new int[]{1};
         Assert.assertArrayEquals(expected, actual);
-
-    }
-
-    /**
-     * </p>
-     * Test that <code>Sudoku.renderUsage()</code> renders the usage screen correctly.
-     * </p>
-     */
-    @Test
-    public void testRenderUsage() {
-
-        String expected = "\nUSAGE:\n" +
-                "\n  java Sudoku <filename>\n" +
-                "\n    OR\n" +
-                "\n  cat <filename> | java Sudoku\n" +
-                "\n";
-
-        String actual = Sudoku.renderUsage();
-
-        Assert.assertEquals(expected, actual);
 
     }
 
@@ -227,6 +209,8 @@ public class TestSudoku {
     @Test
     public synchronized void testDataRender() {
 
+        final int[][] data = Sudoku.dataParse(testResourcePath + "TestSudoku.dat");
+
         String expected = "     0 1 2   3 4 5   6 7 8\n" +
                 "   +-------+-------+-------+\n" +
                 " 0 |       |       |       |\n" +
@@ -242,8 +226,27 @@ public class TestSudoku {
                 " 8 |       |     7 |   8   |\n" +
                 "   +-------+-------+-------+\n";
 
-        Sudoku.dataParse(testResourcePath + "TestSudoku.dat");
-        String actual = Sudoku.dataRender();
+        String actual = Sudoku.dataRender(data);
+
+        Assert.assertEquals(expected, actual);
+
+    }
+
+    /**
+     * </p>
+     * Test that <code>Sudoku.renderUsage()</code> renders the usage screen correctly.
+     * </p>
+     */
+    @Test
+    public void testRenderUsage() {
+
+        String expected = "\nUSAGE:\n" +
+                "\n  java Sudoku <filename>\n" +
+                "\n    OR\n" +
+                "\n  cat <filename> | java Sudoku\n" +
+                "\n";
+
+        String actual = Sudoku.renderUsage();
 
         Assert.assertEquals(expected, actual);
 

@@ -5,7 +5,43 @@ import java.util.OptionalInt;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ * <p>
+ * The <code>MatrixHelper</code> class is a utility class that provides functionality
+ * in the form of transforms on int[][] as well as rendering to multi-line String.
+ * </p>
+ */
 class MatrixHelper {
+
+    /**
+     * <p>
+     * The <code>matrixDeepCopy()</code> creates a new instance of int[][] which
+     * is an exact replica of the one provided.
+     * </p>
+     *
+     * @param data The source array.
+     * @return The resulting replicated array.
+     */
+    static int[][] matrixDeepCopy(int[][] data) {
+
+        int rowSize = data.length;
+        int colSize = data[0].length;
+
+        int[][] result = new int[rowSize][colSize];
+
+        for (int r = 0; r < rowSize; r++) {
+
+            for (int c = 0; c < colSize; c++) {
+
+                result[r][c] = data[r][c];
+
+            }
+
+        }
+
+        return result;
+
+    }
 
     /**
      * <p>
@@ -13,8 +49,8 @@ class MatrixHelper {
      * i.e. int[k][i] swaps with int[k][n - i]
      * </p>
      *
-     * @param data The input
-     * @return The result
+     * @param data The source array.
+     * @return The resulting reflected array.
      */
     static int[][] matrixReflectHorizontal(int[][] data) {
 
@@ -37,15 +73,14 @@ class MatrixHelper {
 
     }
 
-
     /**
      * <p>
      * The <code>matrixReflectVertical()</code> reflects the ROWS of int[][].
      * i.e. int[i][k] swaps with int[m - i][k]
      * </p>
      *
-     * @param data The input
-     * @return The result
+     * @param data The source array.
+     * @return The resulting reflected array.
      */
     static int[][] matrixReflectVertical(int[][] data) {
 
@@ -78,8 +113,8 @@ class MatrixHelper {
      * i.e. int[m][n] results in int[n][m]
      * </p>
      *
-     * @param data The input
-     * @return The result
+     * @param data The source array.
+     * @return The resulting transposed array.
      */
     static int[][] matrixTranspose(int[][] data) {
 
@@ -116,8 +151,8 @@ class MatrixHelper {
      * i.e. int[m][n] results in int[n][m]
      * </p>
      *
-     * @param data The input
-     * @return The result
+     * @param data The source array.
+     * @return The resulting rotated array.
      */
     static int[][] matrixRotateQuarterCW(int[][] data) {
 
@@ -154,8 +189,8 @@ class MatrixHelper {
      * i.e. int[m][n] results in int[n][m]
      * </p>
      *
-     * @param data The input
-     * @return The result
+     * @param data The source array.
+     * @return The resulting rotated array.
      */
     static int[][] matrixRotateQuarterAC(int[][] data) {
 
@@ -188,8 +223,8 @@ class MatrixHelper {
      * but quicker to implement in one step.
      * </p>
      *
-     * @param data The input
-     * @return The result
+     * @param data The source array.
+     * @return The resulting rotated array.
      */
     static int[][] matrixRotateHalf(int[][] data) {
 
@@ -214,27 +249,6 @@ class MatrixHelper {
 
     /**
      * <p>
-     * The <code>array2dMaxStringLength()</code> is used to determine the maximum string width
-     * of of values in the int[][]. This is useful in <code>renderMatrix()</code> to render
-     * the int[][] in a dynamic way.
-     * </p>
-     *
-     * @param data The input
-     * @return The number of characters in the widest value.
-     */
-    static int array2dMaxStringLength(int[][] data) {
-
-        OptionalInt max = Arrays.stream(data)
-                .flatMapToInt(Arrays::stream)
-                .map(e -> (Integer.toString(e)).length())
-                .max();
-
-        return max.isPresent() ? max.getAsInt() : 1;
-
-    }
-
-    /**
-     * <p>
      * The <code>renderMatrix()</code> renders an int[][] to a String with:
      * </p><p><ul>
      * <li>
@@ -248,8 +262,8 @@ class MatrixHelper {
      * </li>
      * </ul></p>
      *
-     * @param data The input
-     * @return The string representation of the int[][]
+     * @param data The source array.
+     * @return The string representation of the provided array.
      */
     static String renderMatrix(boolean labels, int[][] data) {
 
@@ -336,5 +350,27 @@ class MatrixHelper {
         return output.toString();
 
     }
+
+    /**
+     * <p>
+     * The <code>array2dMaxStringLength()</code> is used to determine the maximum string width
+     * of of values in the int[][]. This is useful in <code>renderMatrix()</code> to render
+     * the int[][] in a dynamic way.
+     * </p>
+     *
+     * @param data The source array.
+     * @return The number of characters in the widest value.
+     */
+    static int array2dMaxStringLength(int[][] data) {
+
+        OptionalInt max = Arrays.stream(data)
+                .flatMapToInt(Arrays::stream)
+                .map(e -> (Integer.toString(e)).length())
+                .max();
+
+        return max.isPresent() ? max.getAsInt() : 1;
+
+    }
+
 
 }

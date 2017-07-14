@@ -24,9 +24,6 @@ import java.util.regex.Pattern;
  */
 public class Sudoku {
 
-    // The data array is the central data-structure on which everything rests.
-    private static final int[][] data = new int[9][9];
-
     // The FULL_SET immutable set simply offers a starting template to copy when eliminating invalid choices.
     private static final Set<Integer> FULL_SET;
 
@@ -50,13 +47,15 @@ public class Sudoku {
     }
 
     /**
+     * <p>
      * The <code>main</code> method gets executed by Java.
+     * </p>
      *
      * @param args Possibly contains a filename.
      */
     public static void main(String[] args) {
 
-        args = new String[]{"src/test/resources/SudokuTest.dat"};
+        final int[][] data;
 
         boolean solved;
         long bgn, end;
@@ -64,11 +63,11 @@ public class Sudoku {
         switch (args.length) {
 
             case 0:
-                dataParse("");
+                data = dataParse("");
                 break;
 
             case 1:
-                dataParse(args[0]);
+                data = dataParse(args[0]);
                 break;
 
             default:
@@ -77,17 +76,17 @@ public class Sudoku {
 
         }
 
-        System.out.println(dataRender());
+        System.out.println(dataRender(data));
 
         bgn = System.nanoTime();
 
-        solved = dataSolve(0, 0);
+        solved = dataSolve(0, 0, data);
 
         end = System.nanoTime();
 
         if (solved) {
 
-            System.out.println(dataRender());
+            System.out.println(dataRender(data));
 
         } else {
 
@@ -100,13 +99,16 @@ public class Sudoku {
     }
 
     /**
+     * <p>
      * The <code>dataSolve</code> method recurses (with backtracking) through the puzzle eliminating
      * legitimate choices for each available cell.
+     * </p>
      *
-     * @param r The starting row
-     * @param c The starting column
+     * @param r    The starting row
+     * @param c    The starting column
+     * @param data The puzzle array.
      */
-    static boolean dataSolve(int r, int c) {
+    static boolean dataSolve(int r, int c, int[][] data) {
 
         if (r == 9) {
 
@@ -122,15 +124,15 @@ public class Sudoku {
 
         if (data[r][c] != 0) {
 
-            return dataSolve(r + 1, c);
+            return dataSolve(r + 1, c, data);
 
         }
 
-        for (int v : getValidSet(r, c)) {
+        for (int v : getValidSet(r, c, data)) {
 
             data[r][c] = v;
 
-            if (dataSolve(r + 1, c)) {
+            if (dataSolve(r + 1, c, data)) {
 
                 return true;
 
@@ -145,13 +147,17 @@ public class Sudoku {
     }
 
     /**
+     * <p>
      * The <code>getValidSet</code> method simply calculates a set of legitimate options at row <code>r</code>
      * and column <code>c</code>.
+     * </p>
      *
-     * @param r The row
-     * @param c The column
+     * @param r    The row
+     * @param c    The column
+     * @param data The puzzle array.
+     * @return A Set of valid options.
      */
-    static Set<Integer> getValidSet(int r, int c) {
+    static Set<Integer> getValidSet(int r, int c, int[][] data) {
 
         Set<Integer> valid = new LinkedHashSet<>(FULL_SET);
 
@@ -217,9 +223,12 @@ public class Sudoku {
      * </ul>
      * </p>
      *
-     * @ param fileName The filename, <code>stdin</code> is assumed for <code>""</code>.
+     * @param fileName The filename, <code>stdin</code> is assumed for <code>""</code>.
+     * @return The parsed array.
      */
-    static void dataParse(String fileName) {
+    static int[][] dataParse(String fileName) {
+
+        int[][] data = new int[9][9];
 
         Reader reader = new InputStreamReader(System.in);
 
@@ -296,12 +305,19 @@ public class Sudoku {
 
         }
 
+        return data;
+
     }
 
     /**
-     * The <code>dataRender</code> method simply displays the <code>data</code> array.
+     * <p>
+     * The <code>dataRender()</code> method simply displays the <code>data</code> array.
+     * </p>
+     *
+     * @param data The array to be rendered to String.
+     * @return The array represented in a multi-line String.
      */
-    static String dataRender() {
+    static String dataRender(int[][] data) {
 
         String tmp = MatrixHelper.renderMatrix(true, data);
         StringBuilder output = new StringBuilder(1000);
@@ -338,7 +354,11 @@ public class Sudoku {
     }
 
     /**
-     * The <code>renderUsage</code> method simply displays usage information.
+     * <p>
+     * The <code>renderUsage()</code> method simply renders usage information to String.
+     * </p>
+     *
+     * @return The usage information in a multi-line String.
      */
     static String renderUsage() {
 

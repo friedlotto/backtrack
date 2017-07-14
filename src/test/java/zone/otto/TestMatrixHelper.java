@@ -17,6 +17,31 @@ public class TestMatrixHelper {
      * </p>
      */
     @Test
+    public void testMatrixDeepCopy() {
+
+        int[][] input = new int[][]{
+                {1, 2},
+                {3, 4},
+                {5, 6},
+                {7, 8}
+        };
+
+        int[][] expected = input;
+
+        int[][] actual = MatrixHelper.matrixDeepCopy(input);
+
+        Assert.assertFalse(input == actual);
+
+        Assert.assertArrayEquals(expected, actual);
+
+    }
+
+    /**
+     * <p>
+     * Test that <code>testMatrixReflectHorizontal()</code> transforms an int[][] correctly.
+     * </p>
+     */
+    @Test
     public void testMatrixReflectHorizontal() {
 
         int[][] input = new int[][]{
@@ -36,6 +61,7 @@ public class TestMatrixHelper {
         int[][] actual = MatrixHelper.matrixReflectHorizontal(input);
 
         Assert.assertArrayEquals(expected, actual);
+
     }
 
     /**
@@ -63,6 +89,7 @@ public class TestMatrixHelper {
         int[][] actual = MatrixHelper.matrixReflectVertical(input);
 
         Assert.assertArrayEquals(expected, actual);
+
     }
 
     /**
@@ -88,6 +115,7 @@ public class TestMatrixHelper {
         int[][] actual = MatrixHelper.matrixTranspose(input);
 
         Assert.assertArrayEquals(expected, actual);
+
     }
 
     /**
