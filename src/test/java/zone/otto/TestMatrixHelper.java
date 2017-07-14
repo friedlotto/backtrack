@@ -19,18 +19,16 @@ public class TestMatrixHelper {
     @Test
     public void testMatrixDeepCopy() {
 
-        int[][] input = new int[][]{
+        int[][] expected = new int[][]{
                 {1, 2},
                 {3, 4},
                 {5, 6},
                 {7, 8}
         };
 
-        int[][] expected = input;
+        int[][] actual = MatrixHelper.matrixDeepCopy(expected);
 
-        int[][] actual = MatrixHelper.matrixDeepCopy(input);
-
-        Assert.assertFalse(input == actual);
+        Assert.assertFalse(expected == actual);
 
         Assert.assertArrayEquals(expected, actual);
 
