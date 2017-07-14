@@ -1,28 +1,14 @@
 package zone.otto;
 
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.ExpectedException;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.concurrent.TimeUnit;
 
 public class SudokuTest {
 
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
-
-    private ByteArrayOutputStream stdOut = new ByteArrayOutputStream();
-    private ByteArrayOutputStream stdErr = new ByteArrayOutputStream();
-
-    @Before
-    public void streamsIntercept() {
-
-        System.setOut(new PrintStream(stdOut));
-        System.setErr(new PrintStream(stdErr));
-
-    }
 
     private static final String testResourcePath = "target/test-classes/";
 
@@ -31,7 +17,7 @@ public class SudokuTest {
 
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("ERROR: The file (");
-        Sudoku.dataGet("NonExistentFile.dat");
+        Sudoku.dataParse("NonExistentFile.dat");
 
     }
 
@@ -40,7 +26,7 @@ public class SudokuTest {
 
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("ERROR: Insufficient number of valid input lines: ");
-        Sudoku.dataGet(testResourcePath + "SudokuTestMissingLines.dat");
+        Sudoku.dataParse(testResourcePath + "SudokuTestMissingLines.dat");
 
     }
 
@@ -49,38 +35,32 @@ public class SudokuTest {
 
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("ERROR: Line #");
-        Sudoku.dataGet(testResourcePath + "SudokuTestInvalidLine.dat");
+        Sudoku.dataParse(testResourcePath + "SudokuTestInvalidLine.dat");
 
     }
 
     @Test
     public void testDataSolve() {
 
-        String expected = "\n" +
-                "     0 1 2   3 4 5   6 7 8\n" +
+        String expected = "     0 1 2   3 4 5   6 7 8\n" +
                 "   +-------+-------+-------+\n" +
-                " 0 | 3 4 7 | 1 8 2 | 5 6 9 | \n" +
-                " 1 | 5 1 9 | 6 7 4 | 2 3 8 | \n" +
-                " 2 | 2 8 6 | 3 5 9 | 1 4 7 | \n" +
+                " 0 | 3 4 7 | 1 8 2 | 5 6 9 |\n" +
+                " 1 | 5 1 9 | 6 7 4 | 2 3 8 |\n" +
+                " 2 | 2 8 6 | 3 5 9 | 1 4 7 |\n" +
                 "   +-------+-------+-------+\n" +
-                " 3 | 1 2 8 | 7 4 5 | 3 9 6 | \n" +
-                " 4 | 4 7 3 | 9 2 6 | 8 5 1 | \n" +
-                " 5 | 6 9 5 | 8 3 1 | 7 2 4 | \n" +
+                " 3 | 1 2 8 | 7 4 5 | 3 9 6 |\n" +
+                " 4 | 4 7 3 | 9 2 6 | 8 5 1 |\n" +
+                " 5 | 6 9 5 | 8 3 1 | 7 2 4 |\n" +
                 "   +-------+-------+-------+\n" +
-                " 6 | 7 3 2 | 4 6 8 | 9 1 5 | \n" +
-                " 7 | 8 6 1 | 5 9 3 | 4 7 2 | \n" +
-                " 8 | 9 5 4 | 2 1 7 | 6 8 3 | \n" +
-                "   +-------+-------+-------+\n" +
-                "\n";
+                " 6 | 7 3 2 | 4 6 8 | 9 1 5 |\n" +
+                " 7 | 8 6 1 | 5 9 3 | 4 7 2 |\n" +
+                " 8 | 9 5 4 | 2 1 7 | 6 8 3 |\n" +
+                "   +-------+-------+-------+\n";
 
-        String actual;
-
-        Sudoku.dataGet(testResourcePath + "SudokuTest.dat");
+        Sudoku.dataParse(testResourcePath + "SudokuTest.dat");
         Assert.assertTrue(Sudoku.dataSolve(0, 0));
 
-        Sudoku.dataPut();
-
-        actual = stdOut.toString();
+        String actual = Sudoku.dataRender();
 
         Assert.assertEquals(expected, actual);
 
@@ -92,8 +72,8 @@ public class SudokuTest {
         int[] actual;
         int[] expected;
 
-        Sudoku.dataGet(testResourcePath + "SudokuTest.dat");
-        Sudoku.dataPut();
+        Sudoku.dataParse(testResourcePath + "SudokuTest.dat");
+        Sudoku.dataRender();
 
         // All cells with a fully populated valid set.
         actual = Sudoku.getValidSet(0, 8).stream().mapToInt(Integer::intValue).sorted().toArray();
@@ -130,7 +110,7 @@ public class SudokuTest {
     }
 
     @Test
-    public void testPrintUsage() {
+    public void testRenderUsage() {
 
         String expected = "\nUSAGE:\n" +
                 "\n  java Sudoku <filename>\n" +
@@ -138,18 +118,35 @@ public class SudokuTest {
                 "\n  cat <filename> | java Sudoku\n" +
                 "\n";
 
-        Sudoku.printUsage();
+        String actual = Sudoku.renderUsage();
 
-        Assert.assertEquals(expected, stdOut.toString());
-        stdOut.reset();
+        Assert.assertEquals(expected, actual);
 
     }
 
-    @After
-    public void streamsRestore() {
+    @Test
+    public synchronized void testDataRender() {
 
-        System.setOut(null);
-        System.setErr(null);
+        String expected = "     0 1 2   3 4 5   6 7 8\n" +
+                "   +-------+-------+-------+\n" +
+                " 0 |       |       |       |\n" +
+                " 1 |   1   | 6   4 |       |\n" +
+                " 2 | 2   6 |   5   |       |\n" +
+                "   +-------+-------+-------+\n" +
+                " 3 |     8 |   4   |       |\n" +
+                " 4 | 4     | 9     |   5   |\n" +
+                " 5 |     5 |   3   |       |\n" +
+                "   +-------+-------+-------+\n" +
+                " 6 | 7   2 |   6   |       |\n" +
+                " 7 |   6   | 5 9 3 | 4     |\n" +
+                " 8 |       |     7 |   8   |\n" +
+                "   +-------+-------+-------+\n";
+
+        Sudoku.dataParse(testResourcePath + "SudokuTest.dat");
+        String actual = Sudoku.dataRender();
+
+        Assert.assertEquals(expected, actual);
+
     }
 
 }

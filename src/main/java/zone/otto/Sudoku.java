@@ -56,26 +56,28 @@ public class Sudoku {
      */
     public static void main(String[] args) {
 
+        args = new String[]{"src/test/resources/SudokuTest.dat"};
+
         boolean solved;
         long bgn, end;
 
         switch (args.length) {
 
             case 0:
-                dataGet("");
+                dataParse("");
                 break;
 
             case 1:
-                dataGet(args[0]);
+                dataParse(args[0]);
                 break;
 
             default:
-                printUsage();
+                System.out.println(renderUsage());
                 return;
 
         }
 
-        dataPut();
+        System.out.println(dataRender());
 
         bgn = System.nanoTime();
 
@@ -85,7 +87,7 @@ public class Sudoku {
 
         if (solved) {
 
-            dataPut();
+            System.out.println(dataRender());
 
         } else {
 
@@ -183,7 +185,7 @@ public class Sudoku {
                         && data[ro + rc][co + cc] > 0) {
 
                     valid.remove(data[ro + rc][co + cc]);
-                    
+
                 }
 
             }
@@ -196,7 +198,7 @@ public class Sudoku {
 
     /**
      * <p>
-     * The <code>dataGet</code> method simply parses a puzzle, either from
+     * The <code>dataParse</code> method simply parses a puzzle, either from
      * <code>stdin</code> or from a file specified by the user in <code>args[0]</code>.
      * </p>
      * <p>
@@ -217,7 +219,7 @@ public class Sudoku {
      *
      * @ param fileName The filename, <code>stdin</code> is assumed for <code>""</code>.
      */
-    static void dataGet(String fileName) {
+    static void dataParse(String fileName) {
 
         Reader reader = new InputStreamReader(System.in);
 
@@ -297,58 +299,62 @@ public class Sudoku {
     }
 
     /**
-     * The <code>dataPut</code> method simply displays the <code>data</code> array.
+     * The <code>dataRender</code> method simply displays the <code>data</code> array.
      */
-    static void dataPut() {
+    static String dataRender() {
 
-        System.out.println();
-        System.out.println("     0 1 2   3 4 5   6 7 8");
+        String tmp = MatrixHelper.matrixToString(true, data);
+        StringBuilder output = new StringBuilder(1000);
 
-        for (int r = 0; r < 9; r++) {
+        // Reformat column headers into clusters of three.
+        tmp = tmp.replaceAll("([0-9]) {3}([0-9]) {3}([0-9])", "$1 $2 $3");
 
-            if (r % 3 == 0) {
+        // Reformat data cells into clusters of three.
+        tmp = tmp.replaceAll("\\| ([0-9]) \\| ([0-9]) \\| ([0-9]) ", "| $1 $2 $3 ");
 
-                System.out.println("   +-------+-------+-------+");
+        // Replace data cells with 0 values with " ".
+        tmp = tmp.replaceAll("(?<=(?:\\||[0-9]) )0", " ");
+
+        // Reformat reformat separators into clusters of three.
+        tmp = tmp.replaceAll("\\+---\\+---\\+---", "+-------");
+
+        int i = 0;
+        for (String line : tmp.split("\n")) {
+
+            // Reformat rows into clusters of three.
+            if (i % 2 == 0
+                    || (i - 1) % 6 == 0) {
+
+                output.append(line + "\n");
 
             }
 
-            System.out.printf(" %01d | ", r);
-
-            for (int c = 0; c < 9; c++) {
-
-                System.out.print(data[r][c] < 1 ? "  " : data[r][c] + " ");
-
-                if (c % 3 == 2) {
-
-                    System.out.print("| ");
-
-                }
-
-            }
-
-            System.out.println();
+            i++;
 
         }
 
-        System.out.println("   +-------+-------+-------+");
-        System.out.println();
+        return output.toString();
 
     }
 
     /**
-     * The <code>printUsage</code> method simply displays usage information.
+     * The <code>renderUsage</code> method simply displays usage information.
      */
-    static void printUsage() {
+    static String renderUsage() {
 
-        System.out.println();
-        System.out.println("USAGE:");
-        System.out.println();
-        System.out.println("  java Sudoku <filename>");
-        System.out.println();
-        System.out.println("    OR");
-        System.out.println();
-        System.out.println("  cat <filename> | java Sudoku");
-        System.out.println();
+        StringBuilder output = new StringBuilder();
+
+        output.append("\n");
+        output.append("USAGE:\n");
+        output.append("\n");
+        output.append("  java Sudoku <filename>\n");
+        output.append("\n");
+        output.append("    OR\n");
+        output.append("\n");
+        output.append("  cat <filename> | java Sudoku\n");
+        output.append("\n");
+
+        return output.toString();
 
     }
 
