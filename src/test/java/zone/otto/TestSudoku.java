@@ -207,7 +207,7 @@ public class TestSudoku {
      * </ul></p>
      */
     @Test
-    public synchronized void testDataRender() {
+    public void testDataRender() {
 
         final int[][] data = Sudoku.dataParse(testResourcePath + "TestSudoku.dat");
 
