@@ -7,10 +7,10 @@ import org.junit.rules.ExpectedException;
 
 /**
  * <p>
- * The <code>SudokuTest</code> class tests the functionality of the <code>Sudoku</code> class.
+ * The <code>TestSudoku</code> class tests the functionality of the <code>Sudoku</code> class.
  * </p>
  */
-public class SudokuTest {
+public class TestSudoku {
 
     /**
      * <p>
