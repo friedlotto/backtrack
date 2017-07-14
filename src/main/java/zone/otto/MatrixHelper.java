@@ -111,6 +111,10 @@ class MatrixHelper {
      * <code>matrixReflectHorizontal(matrixTranspose(int[][]))</code>,
      * but quicker to implement in one step.
      * </p>
+     * <p>
+     * NOTA BENE! In the case of non-square inputs, the shape will be rotated,
+     * i.e. int[m][n] results in int[n][m]
+     * </p>
      *
      * @param data The input
      * @return The result
@@ -144,6 +148,10 @@ class MatrixHelper {
      * This is mathematically equivalent to:
      * <code>matrixReflectVertical(matrixTranspose(int[][]))</code>,
      * but quicker to implement in one step.
+     * </p>
+     * <p>
+     * NOTA BENE! In the case of non-square inputs, the shape will be rotated,
+     * i.e. int[m][n] results in int[n][m]
      * </p>
      *
      * @param data The input
