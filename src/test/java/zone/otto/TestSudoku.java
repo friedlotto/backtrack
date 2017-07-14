@@ -108,7 +108,7 @@ public class TestSudoku {
                 " 8 | 9 5 4 | 2 1 7 | 6 8 3 |\n" +
                 "   +-------+-------+-------+\n";
 
-        Sudoku.dataParse(testResourcePath + "SudokuTest.dat");
+        Sudoku.dataParse(testResourcePath + "TestSudoku.dat");
         Assert.assertTrue(Sudoku.dataSolve(0, 0));
 
         String actual = Sudoku.dataRender();
@@ -156,7 +156,7 @@ public class TestSudoku {
         int[] actual;
         int[] expected;
 
-        Sudoku.dataParse(testResourcePath + "SudokuTest.dat");
+        Sudoku.dataParse(testResourcePath + "TestSudoku.dat");
 
         // All cells with fully populated ValidSet.
         actual = Sudoku.getValidSet(0, 8).stream().mapToInt(Integer::intValue).sorted().toArray();
@@ -242,7 +242,7 @@ public class TestSudoku {
                 " 8 |       |     7 |   8   |\n" +
                 "   +-------+-------+-------+\n";
 
-        Sudoku.dataParse(testResourcePath + "SudokuTest.dat");
+        Sudoku.dataParse(testResourcePath + "TestSudoku.dat");
         String actual = Sudoku.dataRender();
 
         Assert.assertEquals(expected, actual);
