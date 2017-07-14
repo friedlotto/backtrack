@@ -303,7 +303,7 @@ public class Sudoku {
      */
     static String dataRender() {
 
-        String tmp = MatrixHelper.matrixToString(true, data);
+        String tmp = MatrixHelper.renderMatrix(true, data);
         StringBuilder output = new StringBuilder(1000);
 
         // Reformat column headers into clusters of three.

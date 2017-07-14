@@ -5,15 +5,35 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+/**
+ * <p>
+ * The <code>SudokuTest</code> class tests the functionality of the <code>Sudoku</code> class.
+ * </p>
+ */
 public class SudokuTest {
 
+    /**
+     * <p>
+     * Set up exception rule since JUnit4 <code>expects</code> cannot respond to messages."
+     * </p>
+     */
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
 
-    private static final String testResourcePath = "target/test-classes/";
+    /**
+     * <p>
+     * Set up path to test resources
+     * </p>
+     */
+    private static final String testResourcePath = "src/test/resources/";
 
+    /**
+     * <p>
+     * Tests that <code>Sudoku.dataParse()</code> handles invalid filenames.
+     * </p>
+     */
     @Test
-    public void testDataGetBadFileName() {
+    public void testDataParse_BadFileName() {
 
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("ERROR: The file (");
@@ -21,24 +41,55 @@ public class SudokuTest {
 
     }
 
+    /**
+     * <p>
+     * Tests that <code>Sudoku.dataParse()</code> handles invalid input with insufficient lines.
+     * </p>
+     */
     @Test
-    public void testDataGetMissingLines() {
+    public void testDataParse_MissingLines() {
 
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("ERROR: Insufficient number of valid input lines: ");
-        Sudoku.dataParse(testResourcePath + "SudokuTestMissingLines.dat");
+        Sudoku.dataParse(testResourcePath + "testDataParse_MissingLines.dat");
 
     }
 
+    /**
+     * <p>
+     * Tests that <code>Sudoku.dataParse()</code> handles invalid input with invalid lines,
+     * specifically invalid characters (i.e. <code>[^_ 1-9]</code>).
+     * </p>
+     */
     @Test
-    public void testDataGetInvalidLine() {
+    public void testDataParse_InvalidCharacter() {
 
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("ERROR: Line #");
-        Sudoku.dataParse(testResourcePath + "SudokuTestInvalidLine.dat");
+        Sudoku.dataParse(testResourcePath + "testDataParse_InvalidCharacter.dat");
 
     }
 
+    /**
+     * <p>
+     * Tests that <code>Sudoku.dataParse()</code> handles invalid input with invalid lines,
+     * specifically duplicate digits.
+     * </p>
+     */
+    @Test
+    public void testDataParse_DuplicateDigit() {
+
+        expectedEx.expect(RuntimeException.class);
+        expectedEx.expectMessage("ERROR: Line #");
+        Sudoku.dataParse(testResourcePath + "testDataParse_DuplicateDigit.dat");
+
+    }
+
+    /**
+     * <p>
+     * Tests that the backtracking recursive algorithm <code>Sudoku.dataSolve()</code> actually works. :P
+     * </p>
+     */
     @Test
     public void testDataSolve() {
 
@@ -66,6 +117,39 @@ public class SudokuTest {
 
     }
 
+    /**
+     * <p>
+     * Tests that <code>Sudoku.getValidSet()</code> eliminates row, column and
+     * box values correctly from the <code>FULL_SET</code> (i.e. values 1 to 9).
+     * </p><p>
+     * EIGHT assertions are made (in four categories):
+     * </p><p><ul>
+     * <li>
+     * All cells with fully populated ValidSet.<br>
+     * <code>ValidSet.Size() == 9</code><br>
+     * or <code>[1,2,3,4,5,6,7,8,9]</code><br>
+     * (Only ONE candidate)
+     * </li>
+     * <li>
+     * All cells with only a single elimination from the ValidSet.<br>
+     * <code>ValidSet.Size() == 8</code><br>
+     * or <code>[[1-9], [1-9], [1-9], [1-9], [1-9], [1-9], [1-9], [1-9]]</code><br>
+     * (TWO candidates)
+     * </li>
+     * <li>
+     * All cells with only two entry ValidSet.<br>
+     * <code>ValidSet.Size() == 2</code><br>
+     * or <code>[[1-9], [1-9]]</code><br>
+     * (FOUR candidates)
+     * </li>
+     * <li>
+     * All cells with single entry ValidSet.<br>
+     * <code>ValidSet.Size() == 1</code><br>
+     * or <code>[[1-9]]</code><br>
+     * (Only ONE candidate)
+     * </li>
+     * </ul></p>
+     */
     @Test
     public void testGetValidSet() {
 
@@ -73,14 +157,13 @@ public class SudokuTest {
         int[] expected;
 
         Sudoku.dataParse(testResourcePath + "SudokuTest.dat");
-        Sudoku.dataRender();
 
-        // All cells with a fully populated valid set.
+        // All cells with fully populated ValidSet.
         actual = Sudoku.getValidSet(0, 8).stream().mapToInt(Integer::intValue).sorted().toArray();
         expected = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9};
         Assert.assertArrayEquals(expected, actual);
 
-        // All cells with only a single elimination from the valid set.
+        // All cells with only a single elimination from the ValidSet.
         actual = Sudoku.getValidSet(0, 7).stream().mapToInt(Integer::intValue).sorted().toArray();
         expected = new int[]{1, 2, 3, 4, 6, 7, 9};
         Assert.assertArrayEquals(expected, actual);
@@ -88,7 +171,7 @@ public class SudokuTest {
         expected = new int[]{1, 2, 4, 6, 7, 8, 9};
         Assert.assertArrayEquals(expected, actual);
 
-        // All cells with only two entry valid sets.
+        // All cells with only two entry ValidSet.
         actual = Sudoku.getValidSet(6, 5).stream().mapToInt(Integer::intValue).sorted().toArray();
         expected = new int[]{1, 8};
         Assert.assertArrayEquals(expected, actual);
@@ -102,13 +185,18 @@ public class SudokuTest {
         expected = new int[]{1, 2};
         Assert.assertArrayEquals(expected, actual);
 
-        // All cells with only two entry valid sets.
+        // All cells with single entry ValidSet.
         actual = Sudoku.getValidSet(7, 2).stream().mapToInt(Integer::intValue).sorted().toArray();
         expected = new int[]{1};
         Assert.assertArrayEquals(expected, actual);
 
     }
 
+    /**
+     * </p>
+     * Test that <code>Sudoku.renderUsage()</code> renders the usage screen correctly.
+     * </p>
+     */
     @Test
     public void testRenderUsage() {
 
@@ -124,6 +212,18 @@ public class SudokuTest {
 
     }
 
+    /**
+     * <p>
+     * Test that the output of MatrixHelper.renderMatrix() is correctly "Sudokufied", i.e.:
+     * </p><p><ul>
+     * <li>
+     * Data cell 0s replaced with " "
+     * </li>
+     * <li></li>
+     * + Data cells grouped into 3 x 3 boxes.
+     * <li>
+     * </ul></p>
+     */
     @Test
     public synchronized void testDataRender() {
 

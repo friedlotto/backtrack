@@ -3,8 +3,19 @@ package zone.otto;
 import org.junit.Assert;
 import org.junit.Test;
 
+
+/**
+ * <p>
+ * The <code>TestMatrixHelper</code> class tests the functionality of the <code>MatrixHelper</code> class.
+ * </p>
+ */
 public class TestMatrixHelper {
 
+    /**
+     * <p>
+     * Test that <code>testMatrixReflectHorizontal()</code> transforms an int[][] correctly.
+     * </p>
+     */
     @Test
     public void testMatrixReflectHorizontal() {
 
@@ -27,6 +38,11 @@ public class TestMatrixHelper {
         Assert.assertArrayEquals(expected, actual);
     }
 
+    /**
+     * <p>
+     * Test that <code>testMatrixReflectVertical()</code> transforms an int[][] correctly.
+     * </p>
+     */
     @Test
     public void testMatrixReflectVertical() {
 
@@ -49,6 +65,11 @@ public class TestMatrixHelper {
         Assert.assertArrayEquals(expected, actual);
     }
 
+    /**
+     * <p>
+     * Test that <code>testMatrixTranspose()</code> transforms an int[][] correctly.
+     * </p>
+     */
     @Test
     public void testMatrixTranspose() {
 
@@ -69,6 +90,11 @@ public class TestMatrixHelper {
         Assert.assertArrayEquals(expected, actual);
     }
 
+    /**
+     * <p>
+     * Test that <code>testMatrixRotateQuarterCW()</code> transforms an int[][] correctly.
+     * </p>
+     */
     @Test
     public void testMatrixRotateQuarterCW() {
 
@@ -91,6 +117,11 @@ public class TestMatrixHelper {
 
     }
 
+    /**
+     * <p>
+     * Test that <code>testMatrixRotateQuarterAC()</code> transforms an int[][] correctly.
+     * </p>
+     */
     @Test
     public void testMatrixRotateQuarterAC() {
 
@@ -112,6 +143,11 @@ public class TestMatrixHelper {
 
     }
 
+    /**
+     * <p>
+     * Test that <code>testMatrixRotateHalf()</code> transforms an int[][] correctly.
+     * </p>
+     */
     @Test
     public void testMatrixRotateHalf() {
 
@@ -135,6 +171,11 @@ public class TestMatrixHelper {
 
     }
 
+    /**
+     * <p>
+     * Test that <code>testMatrixToString_NoLabels()</code> renders int[][] with no labels.
+     * </p>
+     */
     @Test
     public void testMatrixToString_NoLabels() {
 
@@ -145,22 +186,28 @@ public class TestMatrixHelper {
                 {7, 8}
         };
 
-        String actual = MatrixHelper.matrixToString(false, input);
+        String actual = MatrixHelper.renderMatrix(false, input);
 
         String expected = "+---+---+\n" +
-                        "| 1 | 2 |\n" +
-                        "+---+---+\n" +
-                        "| 3 | 4 |\n" +
-                        "+---+---+\n" +
-                        "| 5 | 6 |\n" +
-                        "+---+---+\n" +
-                        "| 7 | 8 |\n" +
-                        "+---+---+\n";
+                "| 1 | 2 |\n" +
+                "+---+---+\n" +
+                "| 3 | 4 |\n" +
+                "+---+---+\n" +
+                "| 5 | 6 |\n" +
+                "+---+---+\n" +
+                "| 7 | 8 |\n" +
+                "+---+---+\n";
 
         Assert.assertEquals(expected, actual);
 
     }
 
+    /**
+     * <p>
+     * Test that <code>testMatrixToString_NoLabels()</code> renders int[][] with no
+     * labels and value-scaled cell-width.
+     * </p>
+     */
     @Test
     public void testMatrixToString_NoLabelsBigValues() {
 
@@ -171,22 +218,27 @@ public class TestMatrixHelper {
                 {10, 1}
         };
 
-        String actual = MatrixHelper.matrixToString(false, input);
+        String actual = MatrixHelper.renderMatrix(false, input);
 
         String expected = "+----------+----------+\n" +
-                        "| 10000000 |  1000000 |\n" +
-                        "+----------+----------+\n" +
-                        "|   100000 |    10000 |\n" +
-                        "+----------+----------+\n" +
-                        "|     1000 |      100 |\n" +
-                        "+----------+----------+\n" +
-                        "|       10 |        1 |\n" +
-                        "+----------+----------+\n";
+                "| 10000000 |  1000000 |\n" +
+                "+----------+----------+\n" +
+                "|   100000 |    10000 |\n" +
+                "+----------+----------+\n" +
+                "|     1000 |      100 |\n" +
+                "+----------+----------+\n" +
+                "|       10 |        1 |\n" +
+                "+----------+----------+\n";
 
         Assert.assertEquals(expected, actual);
 
     }
 
+    /**
+     * <p>
+     * Test that <code>testMatrixToString_NoLabels()</code> renders int[][] with labels.
+     * </p>
+     */
     @Test
     public void testMatrixToString_Labels() {
 
@@ -197,45 +249,57 @@ public class TestMatrixHelper {
                 {7, 8}
         };
 
-        String actual = MatrixHelper.matrixToString(true, input);
+        String actual = MatrixHelper.renderMatrix(true, input);
 
         String expected = "     0   1\n" +
-                        "   +---+---+\n" +
-                        " 0 | 1 | 2 |\n" +
-                        "   +---+---+\n" +
-                        " 1 | 3 | 4 |\n" +
-                        "   +---+---+\n" +
-                        " 2 | 5 | 6 |\n" +
-                        "   +---+---+\n" +
-                        " 3 | 7 | 8 |\n" +
-                        "   +---+---+\n";
+                "   +---+---+\n" +
+                " 0 | 1 | 2 |\n" +
+                "   +---+---+\n" +
+                " 1 | 3 | 4 |\n" +
+                "   +---+---+\n" +
+                " 2 | 5 | 6 |\n" +
+                "   +---+---+\n" +
+                " 3 | 7 | 8 |\n" +
+                "   +---+---+\n";
 
         Assert.assertEquals(expected, actual);
 
     }
 
+    /**
+     * <p>
+     * Test that <code>testMatrixToString_NoLabels()</code> renders int[][] with labels
+     * that are wider than the maximum width of the data.
+     * </p>
+     */
     @Test
     public void testMatrixToString_LabelsBiggerLabels() {
 
         int[][] input = new int[4][12];
 
-        String actual = MatrixHelper.matrixToString(true, input);
+        String actual = MatrixHelper.renderMatrix(true, input);
 
         String expected = "      00   01   02   03   04   05   06   07   08   09   10   11\n" +
-                        "    +----+----+----+----+----+----+----+----+----+----+----+----+\n" +
-                        " 00 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |\n" +
-                        "    +----+----+----+----+----+----+----+----+----+----+----+----+\n" +
-                        " 01 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |\n" +
-                        "    +----+----+----+----+----+----+----+----+----+----+----+----+\n" +
-                        " 02 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |\n" +
-                        "    +----+----+----+----+----+----+----+----+----+----+----+----+\n" +
-                        " 03 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |\n" +
-                        "    +----+----+----+----+----+----+----+----+----+----+----+----+\n";
+                "    +----+----+----+----+----+----+----+----+----+----+----+----+\n" +
+                " 00 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |\n" +
+                "    +----+----+----+----+----+----+----+----+----+----+----+----+\n" +
+                " 01 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |\n" +
+                "    +----+----+----+----+----+----+----+----+----+----+----+----+\n" +
+                " 02 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |\n" +
+                "    +----+----+----+----+----+----+----+----+----+----+----+----+\n" +
+                " 03 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |  0 |\n" +
+                "    +----+----+----+----+----+----+----+----+----+----+----+----+\n";
 
         Assert.assertEquals(expected, actual);
 
     }
 
+    /**
+     * <p>
+     * Test that <code>testMatrixToString_NoLabels()</code> renders int[][] with data
+     * that are wider than the maximum width of the labels.
+     * </p>
+     */
     @Test
     public void testMatrixToString_LabelsBiggerValues() {
 
@@ -246,7 +310,7 @@ public class TestMatrixHelper {
                 {10, 1}
         };
 
-        String actual = MatrixHelper.matrixToString(true, input);
+        String actual = MatrixHelper.renderMatrix(true, input);
 
         String expected = "            0          1\n" +
                 "   +----------+----------+\n" +
